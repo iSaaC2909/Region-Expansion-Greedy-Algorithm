@@ -1,0 +1,150 @@
+Here’s a **README** for the **Region Expansion Greedy Algorithm**:
+
+---
+
+# Region Expansion Greedy Algorithm
+
+## Overview
+
+The **Region Expansion Greedy Algorithm** is a novel greedy approach for solving optimization problems where you need to select a subset of items based on maximizing the total benefit while minimizing the total cost. This algorithm builds a region of selected tasks progressively, adding tasks in such a way that the most beneficial tasks (in terms of benefit-to-cost ratio) are selected first, while ensuring that the overall cost does not exceed a specified budget.
+
+The algorithm is particularly effective when the task or item selection is subject to resource constraints, such as limited budget, time, or capacity.
+
+## Features
+
+- **Greedy Task Selection**: The algorithm selects tasks/items based on their benefit-to-cost ratio in descending order.
+- **Resource-Constrained**: The selection continues until the total cost exceeds a predefined budget.
+- **Progressive Expansion**: It starts with no selected tasks and progressively expands the selected set by greedily choosing the best task/item at each step.
+- **Optimized for Budgeting Problems**: This algorithm is designed to handle optimization problems where the goal is to maximize benefits while staying within a resource limit.
+
+## Problem Scenario
+
+The algorithm is ideal for scenarios where you have a set of tasks (or items), each with a cost and a benefit. You want to select tasks that maximize the total benefit while ensuring that the total cost remains below a specified budget.
+
+### Example Problem: Task Selection with Budget Constraint
+
+Given a set of tasks, each with a cost and a benefit, select the tasks that maximize the total benefit while ensuring that the total cost does not exceed the available budget.
+
+### Pseudocode Description
+
+1. **Initialize**: Start with an empty set of selected tasks.
+2. **Sort**: Sort tasks based on their benefit-to-cost ratio in descending order.
+3. **Select Tasks**: Greedily select tasks one by one. Add a task to the selected set if it doesn't exceed the budget.
+4. **Terminate**: Stop when no more tasks can be added without exceeding the budget.
+5. **Output**: Return the total benefit of the selected tasks.
+
+## How to Use
+
+### Example Code
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Task {
+    int cost;
+    int benefit;
+    float benefitCostRatio;  // Benefit-to-cost ratio for greedy selection
+
+    Task(int c, int b) : cost(c), benefit(b) {
+        benefitCostRatio = static_cast<float>(b) / c;  // Calculate benefit-to-cost ratio
+    }
+};
+
+bool compareTasks(const Task& a, const Task& b) {
+    return a.benefitCostRatio > b.benefitCostRatio;  // Sort by benefit-to-cost ratio
+}
+
+int regionExpansionGreedy(vector<Task>& tasks, int budget) {
+    // Sort tasks based on benefit-to-cost ratio in descending order
+    sort(tasks.begin(), tasks.end(), compareTasks);
+
+    int totalBenefit = 0;
+    int totalCost = 0;
+
+    // Initialize region (empty set of tasks)
+    vector<Task> selectedTasks;
+
+    for (const auto& task : tasks) {
+        // If adding this task exceeds the budget, stop
+        if (totalCost + task.cost > budget) {
+            break;
+        }
+
+        // Add the task to the region
+        selectedTasks.push_back(task);
+        totalCost += task.cost;
+        totalBenefit += task.benefit;
+    }
+
+    // Output the selected tasks
+    cout << "Selected tasks: \n";
+    for (const auto& task : selectedTasks) {
+        cout << "Cost: " << task.cost << ", Benefit: " << task.benefit << endl;
+    }
+
+    // Return the total benefit of the selected tasks
+    return totalBenefit;
+}
+
+int main() {
+    // Define the tasks with cost and benefit
+    vector<Task> tasks = {
+        Task(3, 6),
+        Task(2, 4),
+        Task(5, 8),
+        Task(6, 7),
+        Task(4, 5)
+    };
+
+    // Define the budget
+    int budget = 10;
+
+    // Call the region expansion greedy algorithm and get the maximum total benefit
+    int maxBenefit = regionExpansionGreedy(tasks, budget);
+
+    // Output the maximum benefit achieved within the budget
+    cout << "Maximum total benefit within budget: " << maxBenefit << endl;
+
+    return 0;
+}
+```
+
+### Key Functions:
+
+- **`Task`**: Represents each task with its `cost`, `benefit`, and computed `benefit-to-cost` ratio.
+- **`compareTasks`**: Custom comparison function to sort tasks by their `benefit-to-cost` ratio in descending order.
+- **`regionExpansionGreedy`**: The core algorithm that greedily selects tasks based on the sorted order and the budget constraint.
+
+### Parameters:
+
+- **`tasks`**: A vector of `Task` objects, each containing the `cost` and `benefit` of a task.
+- **`budget`**: The total available budget or resource limit that the selected tasks' cost should not exceed.
+
+### Output:
+
+- The function returns the total benefit of the selected tasks that fit within the budget, and it also prints out the selected tasks.
+
+## Time Complexity
+
+- **Sorting** the tasks takes **O(n log n)**, where `n` is the number of tasks.
+- The greedy selection loop takes **O(n)**, iterating over all tasks.
+- **Total time complexity**: **O(n log n)** due to sorting.
+
+## Space Complexity
+
+- **Space complexity**: **O(n)**, where `n` is the number of tasks, as we store the tasks and the selected tasks.
+
+## Use Cases
+
+- **Budget-Constrained Selection**: Ideal for scenarios where you have a fixed budget or limited resources, and you need to maximize benefits or output.
+- **Task Scheduling**: Useful for scheduling tasks with different costs and benefits, where you want to optimize the total output without exceeding the available time or cost.
+- **Resource Allocation**: Apply this approach to allocate resources in a way that maximizes the return or benefit from those resources.
+- **Subset Selection Problems**: Use this algorithm when you need to select the most valuable subset of items from a larger set, subject to a budget or resource constraint.
+
+## License
+
+This project is licensed under the MIT License.
